@@ -8,6 +8,10 @@ class Cli:
         for (option, value) in zip(arguments[0::2], arguments[1::2]):
             self.options[option[1:]] = value
 
+    def get_options(self):
+        """ """
+        return self.options
+
     def get_host(self):
         """ """
         if "h" not in self.options.keys():
@@ -19,10 +23,16 @@ class Cli:
             sys.exit("host [-h] format is not valid")
         return self.options["h"]
 
-    def get_port(self):
+    def get_ports(self):
         """ """
+        ports = []
+
         if "p" not in self.options.keys():
-            sys.exit("port [-p] is not provided")
-        if 0 > int(self.options["p"]) or int(self.options["p"]) > 65535:
-            sys.exit("port is out of range [0 - 65535]")
-        return int(self.options["p"])
+            sys.exit("port(s) [-p] not provided")
+
+        for port in self.options["p"].split(","):
+            if 0 > int(port) or int(port) > 65535:
+                sys.exit("port is out of range [0 - 65535]")
+            ports.append(int(port))
+
+        return ports
